@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="pageTitle">Ridimensionatore di Immagini</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8268426852108056"
+     crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-8268426852108056">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .placeholder-bg {
+            background-color: #f0f2f5;
+            background-image:
+                linear-gradient(45deg, #e1e4e8 25%, transparent 25%),
+                linear-gradient(-45deg, #e1e4e8 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #e1e4e8 75%),
+                linear-gradient(-45deg, transparent 75%, #e1e4e8 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .lang-active {
+            background-color: #3b82f6; /* bg-blue-600 */
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+             <div class="flex justify-center items-center gap-4 mb-4">
+                <h1 class="text-4xl font-bold text-gray-900" data-key="mainTitle">Strumento di Ridimensionamento Immagini</h1>
+                <!-- Language Switcher -->
+                <div class="flex items-center border border-gray-300 rounded-lg p-1">
+                    <button id="lang-it" class="px-3 py-1 text-sm font-semibold rounded-md transition-colors duration-200">IT</button>
+                    <button id="lang-en" class="px-3 py-1 text-sm font-semibold rounded-md transition-colors duration-200">EN</button>
+                </div>
+            </div>
+            <p class="text-lg text-gray-600 mt-2" data-key="subTitle">Carica, ridimensiona e scarica le tue immagini in pochi click.</p>
+            <p class="mt-4 max-w-3xl mx-auto text-base text-gray-500" data-key="description">
+                Questo strumento online gratuito ti permette di ridimensionare facilmente le tue immagini digitali. Che tu debba adattare le foto per il tuo blog, ottimizzarle per i social media, ridurne il peso per inviarle via email o semplicemente liberare spazio, questa applicazione fa al caso tuo. L'intero processo avviene nel tuo browser, garantendo che le tue immagini rimangano private e sicure, senza mai essere caricate su un server.
+            </p>
+        </header>
+
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 w-full max-w-5xl mx-auto">
+
+            <!-- Sezione di Upload -->
+            <div id="upload-section" class="text-center border-2 border-dashed border-gray-300 rounded-xl p-8 md:p-12 hover:border-blue-500 transition-colors duration-300 cursor-pointer">
+                <input type="file" id="image-input" class="hidden" accept="image/*">
+                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <p class="mt-4 text-sm text-gray-600">
+                    <span class="font-semibold text-blue-600" data-key="uploadClick">Clicca per caricare</span><span data-key="uploadDrag"> o trascina un'immagine</span>
+                </p>
+                <p class="text-xs text-gray-500 mt-1" data-key="uploadFormats">PNG, JPG, GIF, WEBP</p>
+            </div>
+
+            <!-- Sezione di Editing e Anteprima -->
+            <div id="editor-section" class="hidden mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+                <!-- Colonna Controlli e Immagine Originale -->
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="text-xl font-semibold mb-3" data-key="originalImageTitle">Immagine Originale</h2>
+                        <div class="relative w-full rounded-lg overflow-hidden border border-gray-200">
+                            <img id="original-image-preview" src="#" alt="Originale" class="max-w-full h-auto mx-auto block">
+                            <div id="original-image-info" class="absolute bottom-0 left-0 bg-black bg-opacity-60 text-white text-xs p-2 rounded-tr-lg"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-800" data-key="resizeOptionsTitle">Opzioni di Ridimensionamento</h3>
+
+                        <!-- Dimensioni -->
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-1">
+                                <label for="width-input" class="block text-sm font-medium text-gray-700" data-key="widthLabel">Larghezza (px)</label>
+                                <input type="number" id="width-input" class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="flex-1">
+                                <label for="height-input" class="block text-sm font-medium text-gray-700" data-key="heightLabel">Altezza (px)</label>
+                                <input type="number" id="height-input" class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <!-- Mantieni Proporzioni -->
+                        <div class="flex items-center">
+                            <input id="aspect-ratio-lock" type="checkbox" checked class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                            <label for="aspect-ratio-lock" class="ml-2 block text-sm text-gray-900" data-key="aspectRatioLabel">Mantieni proporzioni</label>
+                        </div>
+
+                        <!-- Formato e Qualità -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="format-select" class="block text-sm font-medium text-gray-700" data-key="formatLabel">Formato</label>
+                                <select id="format-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                    <option value="image/jpeg">JPEG</option>
+                                    <option value="image/png">PNG</option>
+                                    <option value="image/webp">WEBP</option>
+                                </select>
+                            </div>
+                            <div id="quality-control">
+                                <label for="quality-slider" class="block text-sm font-medium text-gray-700" data-key="qualityLabel">Qualità (<span id="quality-value">0.9</span>)</label>
+                                <input type="range" id="quality-slider" min="0.1" max="1" step="0.1" value="0.9" class="mt-1 w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colonna Anteprima e Download -->
+                <div class="space-y-6 sticky top-8">
+                    <div>
+                        <h2 class="text-xl font-semibold mb-3" data-key="resizedPreviewTitle">Anteprima Ridimensionata</h2>
+                         <div class="relative w-full rounded-lg overflow-hidden border border-gray-200 placeholder-bg min-h-[200px] flex items-center justify-center">
+                            <canvas id="canvas" class="hidden"></canvas>
+                            <img id="resized-image-preview" src="#" alt="Ridimensionata" class="max-w-full h-auto mx-auto block hidden">
+                            <div id="resized-image-info" class="absolute bottom-0 left-0 bg-black bg-opacity-60 text-white text-xs p-2 rounded-tr-lg hidden"></div>
+                            <p id="preview-placeholder" class="text-gray-500" data-key="previewPlaceholder">L'anteprima apparirà qui</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                        <button id="download-button" disabled class="w-full flex-1 bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed" data-key="downloadButton">
+                            Scarica Immagine
+                        </button>
+                        <button id="reset-button" class="w-full sm:w-auto bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors duration-300" data-key="resetButton">
+                            Nuova Immagine
+                        </button>
+                    </div>
+
+                    <!-- Sezione Condivisione -->
+                    <div id="share-section" class="hidden pt-4 space-y-3">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center" data-key="shareTitle">Condividi</h3>
+                        <div class="flex items-center justify-center space-x-2">
+                             <!-- Pulsante Copia -->
+                            <button id="copy-button" data-key-title="copyTitle" title="Copia immagine negli appunti" class="flex items-center justify-center w-full bg-green-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300">
+                               <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                  <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                                </svg>
+                                <span id="copy-button-text" data-key="copyButton">Copia</span>
+                            </button>
+                             <!-- Pulsante X -->
+                            <button id="share-x-button" data-key-title="shareXTitle" title="Condividi su X" class="p-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors duration-300">
+                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                </svg>
+                            </button>
+                            <!-- Pulsante Facebook -->
+                            <button id="share-facebook-button" data-key-title="shareFbTitle" title="Condividi su Facebook" class="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <!-- Pulsante WhatsApp -->
+                            <button id="share-whatsapp-button" data-key-title="shareWaTitle" title="Condividi su WhatsApp" class="p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-300">
+                               <svg class="h-5 w-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.31 20.59C8.76 21.33 10.37 21.78 12.04 21.78C17.5 21.78 21.95 17.33 21.95 11.87C21.95 6.41 17.5 2 12.04 2M12.04 3.67C16.56 3.67 20.28 7.39 20.28 11.91C20.28 16.43 16.56 20.11 12.04 20.11C10.49 20.11 8.99 19.7 7.7 18.91L7.29 18.67L4.83 19.23L5.4 16.83L5.15 16.41C4.28 15.03 3.8 13.5 3.8 11.91C3.8 7.39 7.52 3.67 12.04 3.67M9.13 7.5C8.89 7.5 8.67 7.54 8.5 7.73C8.38 7.84 8.04 8.15 8.04 8.8C8.04 9.45 8.5 10.08 8.63 10.25C8.75 10.42 9.81 12.18 11.56 12.93C13.31 13.68 13.73 13.54 14.12 13.5C14.51 13.46 15.45 12.93 15.63 12.38C15.81 11.83 15.81 11.36 15.75 11.25C15.68 11.14 15.53 11.08 15.29 10.96C15.05 10.84 13.81 10.23 13.57 10.14C13.33 10.05 13.18 10.01 13.03 10.25C12.88 10.49 12.44 11.01 12.3 11.18C12.16 11.35 12.01 11.38 11.77 11.26C11.53 11.14 10.79 10.89 9.89 10.08C9.18 9.45 8.73 8.71 8.61 8.47C8.48 8.23 8.58 8.11 8.7 8C8.81 7.91 8.93 7.76 9.05 7.62C9.17 7.48 9.21 7.39 9.13 7.25C9.05 7.11 8.74 6.36 8.61 6.05C8.49 5.74 8.37 5.78 8.25 5.78C8.14 5.78 7.96 5.78 7.78 5.78" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <footer class="text-center mt-12 text-sm text-gray-500 space-y-2">
+            <p data-key="footerRights">© 2025 Nicola Nicolaci. Tutti i diritti riservati.</p>
+            <div class="space-x-4">
+                <a href="#" id="disclaimer-link" class="hover:underline text-blue-600" data-key="footerDisclaimer">Disclaimer</a>
+                <span>|</span>
+                <a href="#" id="privacy-link" class="hover:underline text-blue-600" data-key="footerPrivacy">Privacy Policy</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modale Disclaimer -->
+    <div id="disclaimer-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 md:p-8 max-w-2xl w-full relative animate-fade-in">
+            <h2 class="text-2xl font-bold mb-4" data-key="disclaimerTitle">Disclaimer</h2>
+            <p class="text-gray-600 mb-4" data-key="disclaimerP1">
+                Questo strumento è fornito "così com'è", senza garanzie di alcun tipo, esplicite o implicite. L'utente si assume la piena responsabilità per l'utilizzo di questo servizio.
+            </p>
+            <p class="text-gray-600 mb-4" data-key="disclaimerP2">
+                Tutte le operazioni di ridimensionamento delle immagini vengono eseguite localmente nel browser dell'utente. Nessuna immagine viene caricata o memorizzata sui nostri server.
+            </p>
+             <p class="text-gray-600" data-key="disclaimerP3">
+                L'utente è l'unico responsabile di assicurarsi di avere i diritti e le autorizzazioni necessarie per utilizzare, modificare e scaricare le immagini caricate. Non ci assumiamo alcuna responsabilità per violazioni del copyright o per qualsiasi altro uso improprio delle immagini.
+            </p>
+            <p class="text-gray-600 mt-4" data-key="disclaimerP4">
+                Per qualsiasi domanda o chiarimento, è possibile contattarci all'indirizzo: <a href="mailto:luminaessenza1@gmail.com" class="text-blue-600 hover:underline">luminaessenza1@gmail.com</a>.
+            </p>
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeModal('disclaimer-modal')">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modale Privacy Policy -->
+    <div id="privacy-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 md:p-8 max-w-2xl w-full relative animate-fade-in">
+            <h2 class="text-2xl font-bold mb-4" data-key="privacyTitle">Privacy Policy</h2>
+            <p class="text-gray-600 mb-4" data-key="privacyP1">
+                La tua privacy è estremamente importante per noi. Questo strumento di ridimensionamento immagini è progettato per funzionare interamente lato client.
+            </p>
+            <p class="text-gray-600 font-semibold mb-2" data-key="privacyP2">Nessuna raccolta di dati:</p>
+            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                <li data-key="privacyL1">Non carichiamo, salviamo, né visualizziamo le tue immagini su alcun server.</li>
+                <li data-key="privacyL2">L'intero processo di elaborazione dell'immagine avviene direttamente nel tuo browser web.</li>
+                <li data-key="privacyL3">Non raccogliamo alcuna informazione personale o dato relativo alle immagini che elabori.</li>
+            </ul>
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeModal('privacy-modal')">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- Inizio Blocco Traduzioni ---
+        const translations = {
+            en: {
+                pageTitle: "Image Resizer",
+                mainTitle: "Image Resizer Tool",
+                subTitle: "Upload, resize, and download your images in a few clicks.",
+                description: "This free online tool allows you to easily resize your digital images. Whether you need to fit photos for your blog, optimize them for social media, reduce their weight for email, or simply free up space, this application is for you. The entire process happens in your browser, ensuring your images remain private and secure, never being uploaded to a server.",
+                uploadClick: "Click to upload",
+                uploadDrag: " or drag and drop an image",
+                uploadFormats: "PNG, JPG, GIF, WEBP",
+                originalImageTitle: "Original Image",
+                resizeOptionsTitle: "Resize Options",
+                widthLabel: "Width (px)",
+                heightLabel: "Height (px)",
+                aspectRatioLabel: "Maintain aspect ratio",
+                formatLabel: "Format",
+                qualityLabel: "Quality",
+                resizedPreviewTitle: "Resized Preview",
+                previewPlaceholder: "The preview will appear here",
+                downloadButton: "Download Image",
+                resetButton: "New Image",
+                shareTitle: "Share",
+                copyButton: "Copy",
+                copyTitle: "Copy image to clipboard",
+                shareXTitle: "Share on X",
+                shareFbTitle: "Share on Facebook",
+                shareWaTitle: "Share on WhatsApp",
+                footerRights: "© 2025 Nicola Nicolaci. All rights reserved.",
+                footerDisclaimer: "Disclaimer",
+                footerPrivacy: "Privacy Policy",
+                disclaimerTitle: "Disclaimer",
+                disclaimerP1: "This tool is provided 'as is', without any warranties, express or implied. The user assumes full responsibility for the use of this service.",
+                disclaimerP2: "All image resizing operations are performed locally in the user's browser. No images are uploaded or stored on our servers.",
+                disclaimerP3: "The user is solely responsible for ensuring they have the necessary rights and permissions to use, modify, and download the uploaded images. We assume no liability for copyright infringement or any other misuse of the images.",
+                disclaimerP4: "For any questions or clarifications, you can contact us at: ",
+                privacyTitle: "Privacy Policy",
+                privacyP1: "Your privacy is extremely important to us. This image resizing tool is designed to work entirely client-side.",
+                privacyP2: "No data collection:",
+                privacyL1: "We do not upload, save, or view your images on any server.",
+                privacyL2: "The entire image processing happens directly in your web browser.",
+                privacyL3: "We do not collect any personal information or data related to the images you process.",
+                alertInvalidFile: "Please upload a valid image file.",
+                copySuccess: "Copied!",
+                copyError: "Error",
+                shareText: "Check out this awesome tool to resize images!"
+            },
+            it: {
+                pageTitle: "Ridimensionatore di Immagini",
+                mainTitle: "Strumento di Ridimensionamento Immagini",
+                subTitle: "Carica, ridimensiona e scarica le tue immagini in pochi click.",
+                description: "Questo strumento online gratuito ti permette di ridimensionare facilmente le tue immagini digitali. Che tu debba adattare le foto per il tuo blog, ottimizzarle per i social media, ridurne il peso per inviarle via email o semplicemente liberare spazio, questa applicazione fa al caso tuo. L'intero processo avviene nel tuo browser, garantendo che le tue immagini rimangano private e sicure, senza mai essere caricate su un server.",
+                uploadClick: "Clicca per caricare",
+                uploadDrag: " o trascina un'immagine",
+                uploadFormats: "PNG, JPG, GIF, WEBP",
+                originalImageTitle: "Immagine Originale",
+                resizeOptionsTitle: "Opzioni di Ridimensionamento",
+                widthLabel: "Larghezza (px)",
+                heightLabel: "Altezza (px)",
+                aspectRatioLabel: "Mantieni proporzioni",
+                formatLabel: "Formato",
+                qualityLabel: "Qualità",
+                resizedPreviewTitle: "Anteprima Ridimensionata",
+                previewPlaceholder: "L'anteprima apparirà qui",
+                downloadButton: "Scarica Immagine",
+                resetButton: "Nuova Immagine",
+                shareTitle: "Condividi",
+                copyButton: "Copia",
+                copyTitle: "Copia immagine negli appunti",
+                shareXTitle: "Condividi su X",
+                shareFbTitle: "Condividi su Facebook",
+                shareWaTitle: "Condividi su WhatsApp",
+                footerRights: "© 2025 Nicola Nicolaci. Tutti i diritti riservati.",
+                footerDisclaimer: "Disclaimer",
+                footerPrivacy: "Privacy Policy",
+                disclaimerTitle: "Disclaimer",
+                disclaimerP1: "Questo strumento è fornito 'così com'è', senza garanzie di alcun tipo, esplicite o implicite. L'utente si assume la piena responsabilità per l'utilizzo di questo servizio.",
+                disclaimerP2: "Tutte le operazioni di ridimensionamento delle immagini vengono eseguite localmente nel browser dell'utente. Nessuna immagine viene caricata o memorizzata sui nostri server.",
+                disclaimerP3: "L'utente è l'unico responsabile di assicurarsi di avere i diritti e le autorizzazioni necessarie per utilizzare, modificare e scaricare le immagini caricate. Non ci assumiamo alcuna responsabilità per violazioni del copyright o per qualsiasi altro uso improprio delle immagini.",
+                disclaimerP4: "Per qualsiasi domanda o chiarimento, è possibile contattarci all'indirizzo: ",
+                privacyTitle: "Privacy Policy",
+                privacyP1: "La tua privacy è estremamente importante per noi. Questo strumento di ridimensionamento immagini è progettato per funzionare interamente lato client.",
+                privacyP2: "Nessuna raccolta di dati:",
+                privacyL1: "Non carichiamo, salviamo, né visualizziamo le tue immagini su alcun server.",
+                privacyL2: "L'intero processo di elaborazione dell'immagine avviene direttamente nel tuo browser web.",
+                privacyL3: "Non raccogliamo alcuna informazione personale o dato relativo alle immagini che elabori.",
+                alertInvalidFile: "Per favore, carica un file immagine valido.",
+                copySuccess: "Copiato!",
+                copyError: "Errore",
+                shareText: "Scopri questo fantastico strumento per ridimensionare le immagini!"
+            }
+        };
+
+        let currentLang = 'it'; // Default language
+
+        const langItButton = document.getElementById('lang-it');
+        const langEnButton = document.getElementById('lang-en');
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+             document.querySelectorAll('[data-key-title]').forEach(element => {
+                const key = element.getAttribute('data-key-title');
+                if (translations[lang][key]) {
+                    element.title = translations[lang][key];
+                }
+            });
+
+             // Handle special case for the contact email link in the disclaimer
+            const disclaimerP4 = document.querySelector('[data-key="disclaimerP4"]');
+            if (disclaimerP4) {
+                 disclaimerP4.innerHTML = `${translations[lang].disclaimerP4} <a href="mailto:luminaessenza1@gmail.com" class="text-blue-600 hover:underline">luminaessenza1@gmail.com</a>.`;
+            }
+
+            // Update active button style
+            if (lang === 'it') {
+                langItButton.classList.add('lang-active');
+                langEnButton.classList.remove('lang-active');
+            } else {
+                langEnButton.classList.add('lang-active');
+                langItButton.classList.remove('lang-active');
+            }
+        }
+        
+        langItButton.addEventListener('click', () => setLanguage('it'));
+        langEnButton.addEventListener('click', () => setLanguage('en'));
+
+        // Set initial language based on browser preference
+        const userLang = navigator.language.split('-')[0];
+        setLanguage(userLang === 'it' ? 'it' : 'en');
+        // --- Fine Blocco Traduzioni ---
+
+
+        const imageInput = document.getElementById('image-input');
+        const uploadSection = document.getElementById('upload-section');
+        const editorSection = document.getElementById('editor-section');
+
+        const originalImagePreview = document.getElementById('original-image-preview');
+        const originalImageInfo = document.getElementById('original-image-info');
+        
+        const widthInput = document.getElementById('width-input');
+        const heightInput = document.getElementById('height-input');
+        const aspectRatioLock = document.getElementById('aspect-ratio-lock');
+        
+        const formatSelect = document.getElementById('format-select');
+        const qualityControl = document.getElementById('quality-control');
+        const qualitySlider = document.getElementById('quality-slider');
+        const qualityValue = document.getElementById('quality-value');
+
+        const canvas = document.getElementById('canvas');
+        const resizedImagePreview = document.getElementById('resized-image-preview');
+        const resizedImageInfo = document.getElementById('resized-image-info');
+        const previewPlaceholder = document.getElementById('preview-placeholder');
+        
+        const downloadButton = document.getElementById('download-button');
+        const resetButton = document.getElementById('reset-button');
+        
+        const shareSection = document.getElementById('share-section');
+        const copyButton = document.getElementById('copy-button');
+        const copyButtonText = document.getElementById('copy-button-text');
+        const shareXButton = document.getElementById('share-x-button');
+        const shareFacebookButton = document.getElementById('share-facebook-button');
+        const shareWhatsappButton = document.getElementById('share-whatsapp-button');
+
+        let originalImage = null;
+        let originalAspectRatio = 1;
+        let originalFileName = 'image';
+
+        // --- Gestione Upload ---
+        uploadSection.addEventListener('click', () => imageInput.click());
+        uploadSection.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadSection.classList.add('border-blue-500', 'bg-blue-50');
+        });
+        uploadSection.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadSection.classList.remove('border-blue-500', 'bg-blue-50');
+        });
+        uploadSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadSection.classList.remove('border-blue-500', 'bg-blue-50');
+            const files = e.dataTransfer.files;
+            if (files.length) {
+                handleFile(files[0]);
+            }
+        });
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert(translations[currentLang].alertInvalidFile);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                originalImage = new Image();
+                originalImage.onload = () => {
+                    originalAspectRatio = originalImage.width / originalImage.height;
+
+                    originalImagePreview.src = e.target.result;
+                    originalImageInfo.textContent = `${originalImage.width}x${originalImage.height}px - ${(file.size / 1024).toFixed(2)} KB`;
+                    
+                    widthInput.value = originalImage.width;
+                    heightInput.value = originalImage.height;
+
+                    uploadSection.classList.add('hidden');
+                    editorSection.classList.remove('hidden');
+
+                    originalFileName = file.name.split('.').slice(0, -1).join('.');
+
+                    updateCanvas();
+                };
+                originalImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // --- Gestione Controlli ---
+        widthInput.addEventListener('input', () => {
+            if (aspectRatioLock.checked) {
+                heightInput.value = Math.round(widthInput.value / originalAspectRatio);
+            }
+            updateCanvas();
+        });
+
+        heightInput.addEventListener('input', () => {
+            if (aspectRatioLock.checked) {
+                widthInput.value = Math.round(heightInput.value * originalAspectRatio);
+            }
+            updateCanvas();
+        });
+        
+        aspectRatioLock.addEventListener('change', () => {
+            if (aspectRatioLock.checked && originalImage) {
+                 heightInput.value = Math.round(widthInput.value / originalAspectRatio);
+                 updateCanvas();
+            }
+        });
+
+        formatSelect.addEventListener('change', () => {
+            qualityControl.style.display = formatSelect.value === 'image/jpeg' || formatSelect.value === 'image/webp' ? 'block' : 'none';
+            updateCanvas();
+        });
+
+        qualitySlider.addEventListener('input', () => {
+            qualityValue.textContent = qualitySlider.value;
+            updateCanvas();
+        });
+        
+        // --- Aggiornamento Canvas e Anteprima ---
+        function debounce(func, delay = 250) {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+
+        const debouncedUpdateCanvas = debounce(updateCanvas);
+
+        function updateCanvas() {
+            if (!originalImage || !widthInput.value || !heightInput.value) return;
+
+            const width = parseInt(widthInput.value, 10);
+            const height = parseInt(heightInput.value, 10);
+
+            if (width <= 0 || height <= 0) return;
+
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, width, height);
+            ctx.drawImage(originalImage, 0, 0, width, height);
+
+            const format = formatSelect.value;
+            const quality = parseFloat(qualitySlider.value);
+            
+            canvas.toBlob((blob) => {
+                if(blob){
+                    const url = URL.createObjectURL(blob);
+                    resizedImagePreview.src = url;
+                    
+                    resizedImageInfo.textContent = `${width}x${height}px - ${(blob.size / 1024).toFixed(2)} KB`;
+                    
+                    resizedImagePreview.classList.remove('hidden');
+                    resizedImageInfo.classList.remove('hidden');
+                    previewPlaceholder.classList.add('hidden');
+                    
+                    downloadButton.disabled = false;
+                    shareSection.classList.remove('hidden');
+                } else {
+                    downloadButton.disabled = true;
+                    shareSection.classList.add('hidden');
+                }
+            }, format, quality);
+        }
+        
+        ['input', 'change'].forEach(event => {
+            widthInput.addEventListener(event, debouncedUpdateCanvas);
+            heightInput.addEventListener(event, debouncedUpdateCanvas);
+            formatSelect.addEventListener(event, debouncedUpdateCanvas);
+            qualitySlider.addEventListener(event, debouncedUpdateCanvas);
+        });
+
+        // --- Download e Reset ---
+        downloadButton.addEventListener('click', () => {
+            const format = formatSelect.value;
+            const quality = parseFloat(qualitySlider.value);
+            const extension = format.split('/')[1];
+
+            const a = document.createElement('a');
+            a.href = resizedImagePreview.src;
+            a.download = `${originalFileName}-resized-${canvas.width}x${canvas.height}.${extension}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+
+        resetButton.addEventListener('click', () => {
+            // Svuota l'input file
+            imageInput.value = '';
+
+            // Resetta le variabili di stato
+            originalImage = null;
+            originalAspectRatio = 1;
+            originalFileName = 'image';
+            
+            // Nascondi l'editor e mostra la sezione di upload
+            editorSection.classList.add('hidden');
+            uploadSection.classList.remove('hidden');
+
+            // Pulisci le anteprime e le informazioni
+            originalImagePreview.src = '#';
+            resizedImagePreview.src = '#';
+            resizedImagePreview.classList.add('hidden');
+            resizedImageInfo.classList.add('hidden');
+            originalImageInfo.textContent = '';
+            
+            // Mostra il placeholder
+            previewPlaceholder.classList.remove('hidden');
+
+            // Disabilita il pulsante di download e nascondi condivisione
+            downloadButton.disabled = true;
+            shareSection.classList.add('hidden');
+        });
+
+        // --- Gestione Condivisione ---
+        copyButton.addEventListener('click', () => {
+             if (!canvas) return;
+            canvas.toBlob(blob => {
+                if(blob){
+                    try {
+                        navigator.clipboard.write([
+                            new ClipboardItem({ [blob.type]: blob })
+                        ]);
+                        copyButtonText.textContent = translations[currentLang].copySuccess;
+                        setTimeout(() => {
+                            copyButtonText.textContent = translations[currentLang].copyButton;
+                        }, 2000);
+                    } catch (error) {
+                        console.error('Errore durante la copia:', error);
+                        copyButtonText.textContent = translations[currentLang].copyError;
+                         setTimeout(() => {
+                            copyButtonText.textContent = translations[currentLang].copyButton;
+                        }, 2000);
+                    }
+                }
+            }, formatSelect.value, parseFloat(qualitySlider.value));
+        });
+
+        function shareOnSocial(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent(translations[currentLang].shareText);
+            let shareUrl = '';
+
+            switch(platform) {
+                case 'x':
+                    shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+                    break;
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                    break;
+                case 'whatsapp':
+                    shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+                    break;
+            }
+
+            if(shareUrl) {
+                window.open(shareUrl, '_blank', 'noopener,noreferrer');
+            }
+        }
+
+        shareXButton.addEventListener('click', () => shareOnSocial('x'));
+        shareFacebookButton.addEventListener('click', () => shareOnSocial('facebook'));
+        shareWhatsappButton.addEventListener('click', () => shareOnSocial('whatsapp'));
+
+
+        // --- Gestione Modali ---
+        const disclaimerLink = document.getElementById('disclaimer-link');
+        const privacyLink = document.getElementById('privacy-link');
+        const disclaimerModal = document.getElementById('disclaimer-modal');
+        const privacyModal = document.getElementById('privacy-modal');
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        disclaimerLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal('disclaimer-modal');
+        });
+
+        privacyLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal('privacy-modal');
+        });
+
+        // Chiudi modale cliccando sullo sfondo
+        window.addEventListener('click', (e) => {
+            if (e.target === disclaimerModal) {
+                closeModal('disclaimer-modal');
+            }
+            if (e.target === privacyModal) {
+                closeModal('privacy-modal');
+            }
+        });
+
+    </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="pageTitle">Ridimensionatore di Immagini</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8268426852108056"
+     crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-8268426852108056">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .placeholder-bg {
+            background-color: #f0f2f5;
+            background-image:
+                linear-gradient(45deg, #e1e4e8 25%, transparent 25%),
+                linear-gradient(-45deg, #e1e4e8 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #e1e4e8 75%),
+                linear-gradient(-45deg, transparent 75%, #e1e4e8 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .lang-active {
+            background-color: #3b82f6; /* bg-blue-600 */
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+             <div class="flex justify-center items-center gap-4 mb-4">
+                <h1 class="text-4xl font-bold text-gray-900" data-key="mainTitle">Strumento di Ridimensionamento Immagini</h1>
+                <!-- Language Switcher -->
+                <div class="flex items-center border border-gray-300 rounded-lg p-1">
+                    <button id="lang-it" class="px-3 py-1 text-sm font-semibold rounded-md transition-colors duration-200">IT</button>
+                    <button id="lang-en" class="px-3 py-1 text-sm font-semibold rounded-md transition-colors duration-200">EN</button>
+                </div>
+            </div>
+            <p class="text-lg text-gray-600 mt-2" data-key="subTitle">Carica, ridimensiona e scarica le tue immagini in pochi click.</p>
+            <p class="mt-4 max-w-3xl mx-auto text-base text-gray-500" data-key="description">
+                Questo strumento online gratuito ti permette di ridimensionare facilmente le tue immagini digitali. Che tu debba adattare le foto per il tuo blog, ottimizzarle per i social media, ridurne il peso per inviarle via email o semplicemente liberare spazio, questa applicazione fa al caso tuo. L'intero processo avviene nel tuo browser, garantendo che le tue immagini rimangano private e sicure, senza mai essere caricate su un server.
+            </p>
+        </header>
+
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 w-full max-w-5xl mx-auto">
+
+            <!-- Sezione di Upload -->
+            <div id="upload-section" class="text-center border-2 border-dashed border-gray-300 rounded-xl p-8 md:p-12 hover:border-blue-500 transition-colors duration-300 cursor-pointer">
+                <input type="file" id="image-input" class="hidden" accept="image/*">
+                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <p class="mt-4 text-sm text-gray-600">
+                    <span class="font-semibold text-blue-600" data-key="uploadClick">Clicca per caricare</span><span data-key="uploadDrag"> o trascina un'immagine</span>
+                </p>
+                <p class="text-xs text-gray-500 mt-1" data-key="uploadFormats">PNG, JPG, GIF, WEBP</p>
+            </div>
+
+            <!-- Sezione di Editing e Anteprima -->
+            <div id="editor-section" class="hidden mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+                <!-- Colonna Controlli e Immagine Originale -->
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="text-xl font-semibold mb-3" data-key="originalImageTitle">Immagine Originale</h2>
+                        <div class="relative w-full rounded-lg overflow-hidden border border-gray-200">
+                            <img id="original-image-preview" src="#" alt="Originale" class="max-w-full h-auto mx-auto block">
+                            <div id="original-image-info" class="absolute bottom-0 left-0 bg-black bg-opacity-60 text-white text-xs p-2 rounded-tr-lg"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-800" data-key="resizeOptionsTitle">Opzioni di Ridimensionamento</h3>
+
+                        <!-- Dimensioni -->
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-1">
+                                <label for="width-input" class="block text-sm font-medium text-gray-700" data-key="widthLabel">Larghezza (px)</label>
+                                <input type="number" id="width-input" class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="flex-1">
+                                <label for="height-input" class="block text-sm font-medium text-gray-700" data-key="heightLabel">Altezza (px)</label>
+                                <input type="number" id="height-input" class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <!-- Mantieni Proporzioni -->
+                        <div class="flex items-center">
+                            <input id="aspect-ratio-lock" type="checkbox" checked class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                            <label for="aspect-ratio-lock" class="ml-2 block text-sm text-gray-900" data-key="aspectRatioLabel">Mantieni proporzioni</label>
+                        </div>
+
+                        <!-- Formato e Qualità -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="format-select" class="block text-sm font-medium text-gray-700" data-key="formatLabel">Formato</label>
+                                <select id="format-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                    <option value="image/jpeg">JPEG</option>
+                                    <option value="image/png">PNG</option>
+                                    <option value="image/webp">WEBP</option>
+                                </select>
+                            </div>
+                            <div id="quality-control">
+                                <label for="quality-slider" class="block text-sm font-medium text-gray-700" data-key="qualityLabel">Qualità (<span id="quality-value">0.9</span>)</label>
+                                <input type="range" id="quality-slider" min="0.1" max="1" step="0.1" value="0.9" class="mt-1 w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colonna Anteprima e Download -->
+                <div class="space-y-6 sticky top-8">
+                    <div>
+                        <h2 class="text-xl font-semibold mb-3" data-key="resizedPreviewTitle">Anteprima Ridimensionata</h2>
+                         <div class="relative w-full rounded-lg overflow-hidden border border-gray-200 placeholder-bg min-h-[200px] flex items-center justify-center">
+                            <canvas id="canvas" class="hidden"></canvas>
+                            <img id="resized-image-preview" src="#" alt="Ridimensionata" class="max-w-full h-auto mx-auto block hidden">
+                            <div id="resized-image-info" class="absolute bottom-0 left-0 bg-black bg-opacity-60 text-white text-xs p-2 rounded-tr-lg hidden"></div>
+                            <p id="preview-placeholder" class="text-gray-500" data-key="previewPlaceholder">L'anteprima apparirà qui</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                        <button id="download-button" disabled class="w-full flex-1 bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed" data-key="downloadButton">
+                            Scarica Immagine
+                        </button>
+                        <button id="reset-button" class="w-full sm:w-auto bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors duration-300" data-key="resetButton">
+                            Nuova Immagine
+                        </button>
+                    </div>
+
+                    <!-- Sezione Condivisione -->
+                    <div id="share-section" class="hidden pt-4 space-y-3">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center" data-key="shareTitle">Condividi</h3>
+                        <div class="flex items-center justify-center space-x-2">
+                             <!-- Pulsante Copia -->
+                            <button id="copy-button" data-key-title="copyTitle" title="Copia immagine negli appunti" class="flex items-center justify-center w-full bg-green-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300">
+                               <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                  <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                                </svg>
+                                <span id="copy-button-text" data-key="copyButton">Copia</span>
+                            </button>
+                             <!-- Pulsante X -->
+                            <button id="share-x-button" data-key-title="shareXTitle" title="Condividi su X" class="p-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors duration-300">
+                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                </svg>
+                            </button>
+                            <!-- Pulsante Facebook -->
+                            <button id="share-facebook-button" data-key-title="shareFbTitle" title="Condividi su Facebook" class="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <!-- Pulsante WhatsApp -->
+                            <button id="share-whatsapp-button" data-key-title="shareWaTitle" title="Condividi su WhatsApp" class="p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-300">
+                               <svg class="h-5 w-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.31 20.59C8.76 21.33 10.37 21.78 12.04 21.78C17.5 21.78 21.95 17.33 21.95 11.87C21.95 6.41 17.5 2 12.04 2M12.04 3.67C16.56 3.67 20.28 7.39 20.28 11.91C20.28 16.43 16.56 20.11 12.04 20.11C10.49 20.11 8.99 19.7 7.7 18.91L7.29 18.67L4.83 19.23L5.4 16.83L5.15 16.41C4.28 15.03 3.8 13.5 3.8 11.91C3.8 7.39 7.52 3.67 12.04 3.67M9.13 7.5C8.89 7.5 8.67 7.54 8.5 7.73C8.38 7.84 8.04 8.15 8.04 8.8C8.04 9.45 8.5 10.08 8.63 10.25C8.75 10.42 9.81 12.18 11.56 12.93C13.31 13.68 13.73 13.54 14.12 13.5C14.51 13.46 15.45 12.93 15.63 12.38C15.81 11.83 15.81 11.36 15.75 11.25C15.68 11.14 15.53 11.08 15.29 10.96C15.05 10.84 13.81 10.23 13.57 10.14C13.33 10.05 13.18 10.01 13.03 10.25C12.88 10.49 12.44 11.01 12.3 11.18C12.16 11.35 12.01 11.38 11.77 11.26C11.53 11.14 10.79 10.89 9.89 10.08C9.18 9.45 8.73 8.71 8.61 8.47C8.48 8.23 8.58 8.11 8.7 8C8.81 7.91 8.93 7.76 9.05 7.62C9.17 7.48 9.21 7.39 9.13 7.25C9.05 7.11 8.74 6.36 8.61 6.05C8.49 5.74 8.37 5.78 8.25 5.78C8.14 5.78 7.96 5.78 7.78 5.78" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <footer class="text-center mt-12 text-sm text-gray-500 space-y-2">
+            <p data-key="footerRights">© 2025 Nicola Nicolaci. Tutti i diritti riservati.</p>
+            <div class="space-x-4">
+                <a href="#" id="disclaimer-link" class="hover:underline text-blue-600" data-key="footerDisclaimer">Disclaimer</a>
+                <span>|</span>
+                <a href="#" id="privacy-link" class="hover:underline text-blue-600" data-key="footerPrivacy">Privacy Policy</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modale Disclaimer -->
+    <div id="disclaimer-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 md:p-8 max-w-2xl w-full relative animate-fade-in">
+            <h2 class="text-2xl font-bold mb-4" data-key="disclaimerTitle">Disclaimer</h2>
+            <p class="text-gray-600 mb-4" data-key="disclaimerP1">
+                Questo strumento è fornito "così com'è", senza garanzie di alcun tipo, esplicite o implicite. L'utente si assume la piena responsabilità per l'utilizzo di questo servizio.
+            </p>
+            <p class="text-gray-600 mb-4" data-key="disclaimerP2">
+                Tutte le operazioni di ridimensionamento delle immagini vengono eseguite localmente nel browser dell'utente. Nessuna immagine viene caricata o memorizzata sui nostri server.
+            </p>
+             <p class="text-gray-600" data-key="disclaimerP3">
+                L'utente è l'unico responsabile di assicurarsi di avere i diritti e le autorizzazioni necessarie per utilizzare, modificare e scaricare le immagini caricate. Non ci assumiamo alcuna responsabilità per violazioni del copyright o per qualsiasi altro uso improprio delle immagini.
+            </p>
+            <p class="text-gray-600 mt-4" data-key="disclaimerP4">
+                Per qualsiasi domanda o chiarimento, è possibile contattarci all'indirizzo: <a href="mailto:luminaessenza1@gmail.com" class="text-blue-600 hover:underline">luminaessenza1@gmail.com</a>.
+            </p>
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeModal('disclaimer-modal')">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modale Privacy Policy -->
+    <div id="privacy-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 md:p-8 max-w-2xl w-full relative animate-fade-in">
+            <h2 class="text-2xl font-bold mb-4" data-key="privacyTitle">Privacy Policy</h2>
+            <p class="text-gray-600 mb-4" data-key="privacyP1">
+                La tua privacy è estremamente importante per noi. Questo strumento di ridimensionamento immagini è progettato per funzionare interamente lato client.
+            </p>
+            <p class="text-gray-600 font-semibold mb-2" data-key="privacyP2">Nessuna raccolta di dati:</p>
+            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                <li data-key="privacyL1">Non carichiamo, salviamo, né visualizziamo le tue immagini su alcun server.</li>
+                <li data-key="privacyL2">L'intero processo di elaborazione dell'immagine avviene direttamente nel tuo browser web.</li>
+                <li data-key="privacyL3">Non raccogliamo alcuna informazione personale o dato relativo alle immagini che elabori.</li>
+            </ul>
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeModal('privacy-modal')">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- Inizio Blocco Traduzioni ---
+        const translations = {
+            en: {
+                pageTitle: "Image Resizer",
+                mainTitle: "Image Resizer Tool",
+                subTitle: "Upload, resize, and download your images in a few clicks.",
+                description: "This free online tool allows you to easily resize your digital images. Whether you need to fit photos for your blog, optimize them for social media, reduce their weight for email, or simply free up space, this application is for you. The entire process happens in your browser, ensuring your images remain private and secure, never being uploaded to a server.",
+                uploadClick: "Click to upload",
+                uploadDrag: " or drag and drop an image",
+                uploadFormats: "PNG, JPG, GIF, WEBP",
+                originalImageTitle: "Original Image",
+                resizeOptionsTitle: "Resize Options",
+                widthLabel: "Width (px)",
+                heightLabel: "Height (px)",
+                aspectRatioLabel: "Maintain aspect ratio",
+                formatLabel: "Format",
+                qualityLabel: "Quality",
+                resizedPreviewTitle: "Resized Preview",
+                previewPlaceholder: "The preview will appear here",
+                downloadButton: "Download Image",
+                resetButton: "New Image",
+                shareTitle: "Share",
+                copyButton: "Copy",
+                copyTitle: "Copy image to clipboard",
+                shareXTitle: "Share on X",
+                shareFbTitle: "Share on Facebook",
+                shareWaTitle: "Share on WhatsApp",
+                footerRights: "© 2025 Nicola Nicolaci. All rights reserved.",
+                footerDisclaimer: "Disclaimer",
+                footerPrivacy: "Privacy Policy",
+                disclaimerTitle: "Disclaimer",
+                disclaimerP1: "This tool is provided 'as is', without any warranties, express or implied. The user assumes full responsibility for the use of this service.",
+                disclaimerP2: "All image resizing operations are performed locally in the user's browser. No images are uploaded or stored on our servers.",
+                disclaimerP3: "The user is solely responsible for ensuring they have the necessary rights and permissions to use, modify, and download the uploaded images. We assume no liability for copyright infringement or any other misuse of the images.",
+                disclaimerP4: "For any questions or clarifications, you can contact us at: ",
+                privacyTitle: "Privacy Policy",
+                privacyP1: "Your privacy is extremely important to us. This image resizing tool is designed to work entirely client-side.",
+                privacyP2: "No data collection:",
+                privacyL1: "We do not upload, save, or view your images on any server.",
+                privacyL2: "The entire image processing happens directly in your web browser.",
+                privacyL3: "We do not collect any personal information or data related to the images you process.",
+                alertInvalidFile: "Please upload a valid image file.",
+                copySuccess: "Copied!",
+                copyError: "Error",
+                shareText: "Check out this awesome tool to resize images!"
+            },
+            it: {
+                pageTitle: "Ridimensionatore di Immagini",
+                mainTitle: "Strumento di Ridimensionamento Immagini",
+                subTitle: "Carica, ridimensiona e scarica le tue immagini in pochi click.",
+                description: "Questo strumento online gratuito ti permette di ridimensionare facilmente le tue immagini digitali. Che tu debba adattare le foto per il tuo blog, ottimizzarle per i social media, ridurne il peso per inviarle via email o semplicemente liberare spazio, questa applicazione fa al caso tuo. L'intero processo avviene nel tuo browser, garantendo che le tue immagini rimangano private e sicure, senza mai essere caricate su un server.",
+                uploadClick: "Clicca per caricare",
+                uploadDrag: " o trascina un'immagine",
+                uploadFormats: "PNG, JPG, GIF, WEBP",
+                originalImageTitle: "Immagine Originale",
+                resizeOptionsTitle: "Opzioni di Ridimensionamento",
+                widthLabel: "Larghezza (px)",
+                heightLabel: "Altezza (px)",
+                aspectRatioLabel: "Mantieni proporzioni",
+                formatLabel: "Formato",
+                qualityLabel: "Qualità",
+                resizedPreviewTitle: "Anteprima Ridimensionata",
+                previewPlaceholder: "L'anteprima apparirà qui",
+                downloadButton: "Scarica Immagine",
+                resetButton: "Nuova Immagine",
+                shareTitle: "Condividi",
+                copyButton: "Copia",
+                copyTitle: "Copia immagine negli appunti",
+                shareXTitle: "Condividi su X",
+                shareFbTitle: "Condividi su Facebook",
+                shareWaTitle: "Condividi su WhatsApp",
+                footerRights: "© 2025 Nicola Nicolaci. Tutti i diritti riservati.",
+                footerDisclaimer: "Disclaimer",
+                footerPrivacy: "Privacy Policy",
+                disclaimerTitle: "Disclaimer",
+                disclaimerP1: "Questo strumento è fornito 'così com'è', senza garanzie di alcun tipo, esplicite o implicite. L'utente si assume la piena responsabilità per l'utilizzo di questo servizio.",
+                disclaimerP2: "Tutte le operazioni di ridimensionamento delle immagini vengono eseguite localmente nel browser dell'utente. Nessuna immagine viene caricata o memorizzata sui nostri server.",
+                disclaimerP3: "L'utente è l'unico responsabile di assicurarsi di avere i diritti e le autorizzazioni necessarie per utilizzare, modificare e scaricare le immagini caricate. Non ci assumiamo alcuna responsabilità per violazioni del copyright o per qualsiasi altro uso improprio delle immagini.",
+                disclaimerP4: "Per qualsiasi domanda o chiarimento, è possibile contattarci all'indirizzo: ",
+                privacyTitle: "Privacy Policy",
+                privacyP1: "La tua privacy è estremamente importante per noi. Questo strumento di ridimensionamento immagini è progettato per funzionare interamente lato client.",
+                privacyP2: "Nessuna raccolta di dati:",
+                privacyL1: "Non carichiamo, salviamo, né visualizziamo le tue immagini su alcun server.",
+                privacyL2: "L'intero processo di elaborazione dell'immagine avviene direttamente nel tuo browser web.",
+                privacyL3: "Non raccogliamo alcuna informazione personale o dato relativo alle immagini che elabori.",
+                alertInvalidFile: "Per favore, carica un file immagine valido.",
+                copySuccess: "Copiato!",
+                copyError: "Errore",
+                shareText: "Scopri questo fantastico strumento per ridimensionare le immagini!"
+            }
+        };
+
+        let currentLang = 'it'; // Default language
+
+        const langItButton = document.getElementById('lang-it');
+        const langEnButton = document.getElementById('lang-en');
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+             document.querySelectorAll('[data-key-title]').forEach(element => {
+                const key = element.getAttribute('data-key-title');
+                if (translations[lang][key]) {
+                    element.title = translations[lang][key];
+                }
+            });
+
+             // Handle special case for the contact email link in the disclaimer
+            const disclaimerP4 = document.querySelector('[data-key="disclaimerP4"]');
+            if (disclaimerP4) {
+                 disclaimerP4.innerHTML = `${translations[lang].disclaimerP4} <a href="mailto:luminaessenza1@gmail.com" class="text-blue-600 hover:underline">luminaessenza1@gmail.com</a>.`;
+            }
+
+            // Update active button style
+            if (lang === 'it') {
+                langItButton.classList.add('lang-active');
+                langEnButton.classList.remove('lang-active');
+            } else {
+                langEnButton.classList.add('lang-active');
+                langItButton.classList.remove('lang-active');
+            }
+        }
+        
+        langItButton.addEventListener('click', () => setLanguage('it'));
+        langEnButton.addEventListener('click', () => setLanguage('en'));
+
+        // Set initial language based on browser preference
+        const userLang = navigator.language.split('-')[0];
+        setLanguage(userLang === 'it' ? 'it' : 'en');
+        // --- Fine Blocco Traduzioni ---
+
+
+        const imageInput = document.getElementById('image-input');
+        const uploadSection = document.getElementById('upload-section');
+        const editorSection = document.getElementById('editor-section');
+
+        const originalImagePreview = document.getElementById('original-image-preview');
+        const originalImageInfo = document.getElementById('original-image-info');
+        
+        const widthInput = document.getElementById('width-input');
+        const heightInput = document.getElementById('height-input');
+        const aspectRatioLock = document.getElementById('aspect-ratio-lock');
+        
+        const formatSelect = document.getElementById('format-select');
+        const qualityControl = document.getElementById('quality-control');
+        const qualitySlider = document.getElementById('quality-slider');
+        const qualityValue = document.getElementById('quality-value');
+
+        const canvas = document.getElementById('canvas');
+        const resizedImagePreview = document.getElementById('resized-image-preview');
+        const resizedImageInfo = document.getElementById('resized-image-info');
+        const previewPlaceholder = document.getElementById('preview-placeholder');
+        
+        const downloadButton = document.getElementById('download-button');
+        const resetButton = document.getElementById('reset-button');
+        
+        const shareSection = document.getElementById('share-section');
+        const copyButton = document.getElementById('copy-button');
+        const copyButtonText = document.getElementById('copy-button-text');
+        const shareXButton = document.getElementById('share-x-button');
+        const shareFacebookButton = document.getElementById('share-facebook-button');
+        const shareWhatsappButton = document.getElementById('share-whatsapp-button');
+
+        let originalImage = null;
+        let originalAspectRatio = 1;
+        let originalFileName = 'image';
+
+        // --- Gestione Upload ---
+        uploadSection.addEventListener('click', () => imageInput.click());
+        uploadSection.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadSection.classList.add('border-blue-500', 'bg-blue-50');
+        });
+        uploadSection.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadSection.classList.remove('border-blue-500', 'bg-blue-50');
+        });
+        uploadSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadSection.classList.remove('border-blue-500', 'bg-blue-50');
+            const files = e.dataTransfer.files;
+            if (files.length) {
+                handleFile(files[0]);
+            }
+        });
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert(translations[currentLang].alertInvalidFile);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                originalImage = new Image();
+                originalImage.onload = () => {
+                    originalAspectRatio = originalImage.width / originalImage.height;
+
+                    originalImagePreview.src = e.target.result;
+                    originalImageInfo.textContent = `${originalImage.width}x${originalImage.height}px - ${(file.size / 1024).toFixed(2)} KB`;
+                    
+                    widthInput.value = originalImage.width;
+                    heightInput.value = originalImage.height;
+
+                    uploadSection.classList.add('hidden');
+                    editorSection.classList.remove('hidden');
+
+                    originalFileName = file.name.split('.').slice(0, -1).join('.');
+
+                    updateCanvas();
+                };
+                originalImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // --- Gestione Controlli ---
+        widthInput.addEventListener('input', () => {
+            if (aspectRatioLock.checked) {
+                heightInput.value = Math.round(widthInput.value / originalAspectRatio);
+            }
+            updateCanvas();
+        });
+
+        heightInput.addEventListener('input', () => {
+            if (aspectRatioLock.checked) {
+                widthInput.value = Math.round(heightInput.value * originalAspectRatio);
+            }
+            updateCanvas();
+        });
+        
+        aspectRatioLock.addEventListener('change', () => {
+            if (aspectRatioLock.checked && originalImage) {
+                 heightInput.value = Math.round(widthInput.value / originalAspectRatio);
+                 updateCanvas();
+            }
+        });
+
+        formatSelect.addEventListener('change', () => {
+            qualityControl.style.display = formatSelect.value === 'image/jpeg' || formatSelect.value === 'image/webp' ? 'block' : 'none';
+            updateCanvas();
+        });
+
+        qualitySlider.addEventListener('input', () => {
+            qualityValue.textContent = qualitySlider.value;
+            updateCanvas();
+        });
+        
+        // --- Aggiornamento Canvas e Anteprima ---
+        function debounce(func, delay = 250) {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+
+        const debouncedUpdateCanvas = debounce(updateCanvas);
+
+        function updateCanvas() {
+            if (!originalImage || !widthInput.value || !heightInput.value) return;
+
+            const width = parseInt(widthInput.value, 10);
+            const height = parseInt(heightInput.value, 10);
+
+            if (width <= 0 || height <= 0) return;
+
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, width, height);
+            ctx.drawImage(originalImage, 0, 0, width, height);
+
+            const format = formatSelect.value;
+            const quality = parseFloat(qualitySlider.value);
+            
+            canvas.toBlob((blob) => {
+                if(blob){
+                    const url = URL.createObjectURL(blob);
+                    resizedImagePreview.src = url;
+                    
+                    resizedImageInfo.textContent = `${width}x${height}px - ${(blob.size / 1024).toFixed(2)} KB`;
+                    
+                    resizedImagePreview.classList.remove('hidden');
+                    resizedImageInfo.classList.remove('hidden');
+                    previewPlaceholder.classList.add('hidden');
+                    
+                    downloadButton.disabled = false;
+                    shareSection.classList.remove('hidden');
+                } else {
+                    downloadButton.disabled = true;
+                    shareSection.classList.add('hidden');
+                }
+            }, format, quality);
+        }
+        
+        ['input', 'change'].forEach(event => {
+            widthInput.addEventListener(event, debouncedUpdateCanvas);
+            heightInput.addEventListener(event, debouncedUpdateCanvas);
+            formatSelect.addEventListener(event, debouncedUpdateCanvas);
+            qualitySlider.addEventListener(event, debouncedUpdateCanvas);
+        });
+
+        // --- Download e Reset ---
+        downloadButton.addEventListener('click', () => {
+            const format = formatSelect.value;
+            const quality = parseFloat(qualitySlider.value);
+            const extension = format.split('/')[1];
+
+            const a = document.createElement('a');
+            a.href = resizedImagePreview.src;
+            a.download = `${originalFileName}-resized-${canvas.width}x${canvas.height}.${extension}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+
+        resetButton.addEventListener('click', () => {
+            // Svuota l'input file
+            imageInput.value = '';
+
+            // Resetta le variabili di stato
+            originalImage = null;
+            originalAspectRatio = 1;
+            originalFileName = 'image';
+            
+            // Nascondi l'editor e mostra la sezione di upload
+            editorSection.classList.add('hidden');
+            uploadSection.classList.remove('hidden');
+
+            // Pulisci le anteprime e le informazioni
+            originalImagePreview.src = '#';
+            resizedImagePreview.src = '#';
+            resizedImagePreview.classList.add('hidden');
+            resizedImageInfo.classList.add('hidden');
+            originalImageInfo.textContent = '';
+            
+            // Mostra il placeholder
+            previewPlaceholder.classList.remove('hidden');
+
+            // Disabilita il pulsante di download e nascondi condivisione
+            downloadButton.disabled = true;
+            shareSection.classList.add('hidden');
+        });
+
+        // --- Gestione Condivisione ---
+        copyButton.addEventListener('click', () => {
+             if (!canvas) return;
+            canvas.toBlob(blob => {
+                if(blob){
+                    try {
+                        navigator.clipboard.write([
+                            new ClipboardItem({ [blob.type]: blob })
+                        ]);
+                        copyButtonText.textContent = translations[currentLang].copySuccess;
+                        setTimeout(() => {
+                            copyButtonText.textContent = translations[currentLang].copyButton;
+                        }, 2000);
+                    } catch (error) {
+                        console.error('Errore durante la copia:', error);
+                        copyButtonText.textContent = translations[currentLang].copyError;
+                         setTimeout(() => {
+                            copyButtonText.textContent = translations[currentLang].copyButton;
+                        }, 2000);
+                    }
+                }
+            }, formatSelect.value, parseFloat(qualitySlider.value));
+        });
+
+        function shareOnSocial(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent(translations[currentLang].shareText);
+            let shareUrl = '';
+
+            switch(platform) {
+                case 'x':
+                    shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+                    break;
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                    break;
+                case 'whatsapp':
+                    shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+                    break;
+            }
+
+            if(shareUrl) {
+                window.open(shareUrl, '_blank', 'noopener,noreferrer');
+            }
+        }
+
+        shareXButton.addEventListener('click', () => shareOnSocial('x'));
+        shareFacebookButton.addEventListener('click', () => shareOnSocial('facebook'));
+        shareWhatsappButton.addEventListener('click', () => shareOnSocial('whatsapp'));
+
+
+        // --- Gestione Modali ---
+        const disclaimerLink = document.getElementById('disclaimer-link');
+        const privacyLink = document.getElementById('privacy-link');
+        const disclaimerModal = document.getElementById('disclaimer-modal');
+        const privacyModal = document.getElementById('privacy-modal');
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        disclaimerLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal('disclaimer-modal');
+        });
+
+        privacyLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal('privacy-modal');
+        });
+
+        // Chiudi modale cliccando sullo sfondo
+        window.addEventListener('click', (e) => {
+            if (e.target === disclaimerModal) {
+                closeModal('disclaimer-modal');
+            }
+            if (e.target === privacyModal) {
+                closeModal('privacy-modal');
+            }
+        });
+
+    </script>
+</body>
+</html>
+
